@@ -1,0 +1,16 @@
+{
+  "name": "me-90-test-data",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "extract_raw": "node scripts/extract_raw.js",
+    "transform_data": "node scripts/transform_data.js",
+    "create_reports": "node scripts/create_reports.js",
+    "process": "npm run extract_raw"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs"
+}
