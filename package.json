@@ -7,10 +7,15 @@
     "extract_raw": "node scripts/extract_raw.js",
     "transform_data": "node scripts/transform_data.js",
     "create_reports": "node scripts/create_reports.js",
+    "render_speedos": "node scripts/render_speedos.js",
     "process": "npm run extract_raw"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "type": "commonjs"
+  "type": "module",
+  "dependencies": {
+    "canvas": "^3.2.0",
+    "pdfjs-dist": "^5.4.149"
+  }
 }
