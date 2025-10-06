@@ -85,7 +85,7 @@ const renderData = (fileName) => {
   };
 
   while (currentTime <= END_TIME) {
-    //if (currentFrame > 1) break; // for dev, failsafe
+    //if (currentFrame > 0) break; // for dev, failsafe
 
     currentTime = calculateTimeForFrame(currentFrame);
 
@@ -108,11 +108,22 @@ const renderData = (fileName) => {
       ctx.font = 'bold 30px Raleway';
       ctx.lineWidth = 2;
 
-      // drawing out quadrants
-      // top-down line
+      // drawing out sections
+      // top-down lines
+      // leftmost
+      ctx.beginPath();
+      ctx.lineTo((canvas.width / 4) - 1, 0);
+      ctx.lineTo((canvas.width / 4) - 1, canvas.height);
+      ctx.stroke();
+      // center
       ctx.beginPath();
       ctx.lineTo((canvas.width / 2) - 1, 0);
       ctx.lineTo((canvas.width / 2) - 1, canvas.height);
+      ctx.stroke();
+      // rightmost
+      ctx.beginPath();
+      ctx.lineTo(((canvas.width * 3) / 4) - 1, 0);
+      ctx.lineTo(((canvas.width * 3) / 4) - 1, canvas.height);
       ctx.stroke();
 
       // left-right line
@@ -121,20 +132,56 @@ const renderData = (fileName) => {
       ctx.lineTo(canvas.width, (canvas.height / 2) - 1);
       ctx.stroke();
 
+      // lines splitting up bottom right section
+      for (let i = 1; i < 6; i++) {
+        ctx.beginPath();
+        ctx.lineTo(((canvas.width * 3) / 4) - 1, (canvas.height / 2) + ((canvas.height * i) / 12) - 1);
+        ctx.lineTo(canvas.width, (canvas.height / 2) + ((canvas.height * i) / 12) - 1);
+        ctx.stroke();
+      }
+
       // big numbers
-      ctx.font = `bold ${canvas.height / 5.4}px sans-serif`;
-      drawTextFromCenter(currentData.speed, (canvas.width / 4) * 1, ((canvas.height / 4) * 1) + (canvas.height / 54)); // speed
-      drawTextFromCenter(currentData.traction_motor_current, (canvas.width / 4) * 3, ((canvas.height / 4) * 1) + (canvas.height / 54)); // traction_motor_current
-      drawTextFromCenter(`${currentData.acceleration_and_brake_command}%`, (canvas.width / 4) * 3, ((canvas.height / 4) * 3) + (canvas.height / 54)); // acceleration_and_brake_command
-      drawTextFromCenter(currentData.brake_cylinder_pressure, (canvas.width / 4) * 1, ((canvas.height / 4) * 3) + (canvas.height / 54)); // brake_cylinder_pressure
+      ctx.font = `bold ${canvas.height / 7.2}px sans-serif`;
+      drawTextFromCenter(currentData.speed, (canvas.width / 8) * 1, ((canvas.height / 4) * 1) + (canvas.height / 54)); // speed
+      drawTextFromCenter(currentData.brake_cylinder_pressure, (canvas.width / 8) * 3, ((canvas.height / 4) * 1) + (canvas.height / 54)); // brake_cylinder_pressure
+      drawTextFromCenter(currentData.emergency_pipe_pressure, (canvas.width / 8) * 5, ((canvas.height / 4) * 1) + (canvas.height / 54)); // emergency_pipe_pressure
+      drawTextFromCenter(currentData.headlight_voltage, (canvas.width / 8) * 7, ((canvas.height / 4) * 1) + (canvas.height / 54)); // headlight_voltage
+      drawTextFromCenter(currentData.battery_voltage, (canvas.width / 8) * 1, ((canvas.height / 4) * 3) + (canvas.height / 54)); // battery_voltage
+      drawTextFromCenter(currentData.traction_motor_current, (canvas.width / 8) * 3, ((canvas.height / 4) * 3) + (canvas.height / 54)); // traction_motor_current
+      drawTextFromCenter(currentData.acceleration_and_brake_command, (canvas.width / 8) * 5, ((canvas.height / 4) * 3) + (canvas.height / 54)); // acceleration_and_brake_command
 
       // small text
       ctx.font = `bold ${canvas.height / 27}px sans-serif`;
-      drawTextFromCenter('Speed (mph)', (canvas.width / 4) * 1, ((canvas.height / 4) * 1) - (canvas.height / 10.8)); // speed
-      drawTextFromCenter('Traction Motor Current (amps)', (canvas.width / 4) * 3, ((canvas.height / 4) * 1) - (canvas.height / 10.8)); // traction_motor_current
-      drawTextFromCenter('Controller Handle', (canvas.width / 4) * 3, ((canvas.height / 4) * 3) - (canvas.height / 10.8)); // acceleration_and_brake_command
-      drawTextFromCenter(convertHandlePositionsToWords(currentData.acceleration_and_brake_command), (canvas.width / 4) * 3, ((canvas.height / 4) * 3) + (canvas.height / 8)); // acceleration_and_brake_command
-      drawTextFromCenter('Brake Cylinder Pressure (psi)', (canvas.width / 4) * 1, ((canvas.height / 4) * 3) - (canvas.height / 10.8)); // brake_cylinder_pressure
+      drawTextFromCenter('Speed (mph)', (canvas.width / 8) * 1, ((canvas.height / 4) * 1) - ((canvas.height / 10.8)) * 1); // speed
+      drawTextFromCenter('Brake Cylinder\n Pressure (psi)', (canvas.width / 8) * 3, ((canvas.height / 4) * 1) - ((canvas.height / 10.8)) * 1.5); // brake_cylinder_pressure
+      drawTextFromCenter('Emergency Pipe\n  Pressure (psi)', (canvas.width / 8) * 5, ((canvas.height / 4) * 1) - ((canvas.height / 10.8)) * 1.5); // emergency_pipe_pressure
+      drawTextFromCenter('Headlight Voltage (v)', (canvas.width / 8) * 7, ((canvas.height / 4) * 1) - ((canvas.height / 10.8)) * 1); // headlight_voltage
+      drawTextFromCenter('Battery Voltage (v)', (canvas.width / 8) * 1, ((canvas.height / 4) * 3) - ((canvas.height / 10.8)) * 1); // battery_voltage
+      drawTextFromCenter('Traction Motor\nCurrent (amps)', (canvas.width / 8) * 3, ((canvas.height / 4) * 3) - ((canvas.height / 10.8)) * 1.5); // traction_motor_current
+      drawTextFromCenter('  Acceleration and\nBrake Command (v)', (canvas.width / 8) * 5, ((canvas.height / 4) * 3) - ((canvas.height / 10.8)) * 1.5); // acceleration_and_brake_command
+
+      // on/off indicators
+      const bottomRightLabels = {
+        'door_closed_indicator': 'Doors Closed',
+        'manual_alerter_reset': 'Alerter Reset',
+        'horn': 'Horn',
+        'bell': 'Bell',
+        'wheel_slip': 'Wheel Slip',
+        'brakes_released': 'Brakes Released',
+      };
+
+
+      Object.keys(bottomRightLabels).forEach((key, i) => {
+        const label = bottomRightLabels[key];
+
+        if (currentData[key]) {
+          ctx.fillRect(((canvas.width * 3) / 4) - 1, (canvas.height / 2) + ((canvas.height * i) / 12) - 1, canvas.width / 4, canvas.height / 12);
+          ctx.fillStyle = BACKGROUND_COLOR;
+        }
+
+        drawTextFromCenter(label, (canvas.width / 8) * 7, ((canvas.height / 2)) + ((canvas.height / 27) * (i * 2.24)) + canvas.height / 24); // speed
+        ctx.fillStyle = FOREGROUND_COLOR;
+      })
     }
 
     const imageBuffer = canvas.toBuffer('image/jpeg', { quality: 0.5 });

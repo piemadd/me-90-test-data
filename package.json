@@ -8,7 +8,7 @@
     "transform_data": "node scripts/transform_data.js",
     "create_reports": "node scripts/create_reports.js",
     "render_speedos": "node scripts/render_speedos.js",
-    "process": "npm run extract_raw"
+    "process": "npm run extract_raw && npm run transform_data && npm run render_speedos"
   },
   "keywords": [],
   "author": "",
