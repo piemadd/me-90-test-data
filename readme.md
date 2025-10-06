@@ -76,4 +76,5 @@ npm run process
 
 ## Results
 Below if a video containing videos 1.webm, 3.webm, and 7.webm combined with the rendered image sequence of this repo in the bottom left.
-[![Youtube thumbnail for ME 90 Test Run](https://img.youtube.com/vi/-PheVPytGTQ/hqdefault.jpg)](https://www.youtube.com/watch?v=-PheVPytGTQ)
+
+[![Youtube thumbnail for ME 90 Test Run](https://img.youtube.com/vi/-PheVPytGTQ/maxresdefault.jpg)](https://www.youtube.com/watch?v=-PheVPytGTQ)
